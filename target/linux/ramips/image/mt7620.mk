@@ -201,7 +201,7 @@ define Device/devolo_acr
   IMAGE_SIZE := 7744k
   DEVICE_VENDOR := DEVOLO
   DEVICE_MODEL := ACR
-	DEVICE_PACKAGES := kmod-mt76x2 kmod-libphy kmod-phylink kmod-phy-realtek
+	DEVICE_PACKAGES := kmod-mt76x2
   SUPPORTED_DEVICES += devolo-acr
 endef
 TARGET_DEVICES += devolo_acr
