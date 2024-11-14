@@ -6,7 +6,15 @@
 /.config
 /.config.old
 /.toolchain_build_ver
-/bin
+!/bin
+/bin/**
+!/bin/targets
+/bin/targets/**
+!/bin/targets/ramips
+/bin/targets/ramips/**
+!/bin/targets/ramips/mt7620
+/bin/targets/ramips/mt7620/**
+!/bin/targets/ramips/mt7620/openwrt-ramips-mt7620-devolo_acr-squashfs-sysupgrade.bin
 /build_dir
 /staging_dir
 /tmp
