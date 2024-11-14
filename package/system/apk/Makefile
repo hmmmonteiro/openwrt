@@ -5,9 +5,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_URL=https://gitlab.alpinelinux.org/alpine/apk-tools.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2024-05-23
-PKG_SOURCE_VERSION:=6052bfef57a81d82451b4cad86f78a2d01959767
-PKG_MIRROR_HASH:=bf14da82cc363ee32a956dd880343018361079018a48701dc2b05cb88c18010e
+PKG_SOURCE_DATE:=2024-11-08
+PKG_SOURCE_VERSION:=d9c24813d983df9524fa7a2b78fc3132c159a20f
+PKG_MIRROR_HASH:=3d1a79c08ef8c8b9404f9287d9acda6468b8b1c2a99dd384287f522ed3b1a047
 
 PKG_VERSION=3.0.0_pre$(subst -,,$(PKG_SOURCE_DATE))
 
@@ -17,7 +17,7 @@ PKG_LICENSE_FILES:=LICENSE
 PKG_INSTALL:=1
 
 HOST_BUILD_PREFIX:=$(STAGING_DIR_HOST)
-PKG_BUILD_DEPENDS:=lua/host
+HOST_BUILD_DEPENDS:=lua/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -36,6 +36,7 @@ define Package/apk-mbedtls
   $(Package/apk/default)
   TITLE += (mbedtls)
   DEPENDS +=+libmbedtls
+  DEFAULT:=y if USE_APK
   VARIANT:=mbedtls
   DEFAULT_VARIANT:=1
   CONFLICTS:=apk-openssl
@@ -51,20 +52,21 @@ endef
 MESON_HOST_VARS+=VERSION=$(PKG_VERSION)
 MESON_VARS+=VERSION=$(PKG_VERSION)
 
-MESON_HOST_ARGS += \
-	-Dhelp=disabled \
+MESON_COMMON_ARGS = \
 	-Dcompressed-help=false \
 	-Ddocs=disabled \
-	-Dcrypto_backend=openssl \
+	-Dhelp=enabled \
+	-Dlua_version=5.1 \
+	-Durl_backend=wget \
 	-Dzstd=false
 
+MESON_HOST_ARGS += \
+	$(MESON_COMMON_ARGS) \
+	-Dcrypto_backend=openssl
+
 MESON_ARGS += \
-	-Dlua_version=5.1 \
-	-Dcompressed-help=false \
-	-Ddocs=disabled \
-	-Durl_backend=wget \
-	-Dcrypto_backend=$(BUILD_VARIANT) \
-	-Dzstd=false
+	$(MESON_COMMON_ARGS) \
+	-Dcrypto_backend=$(BUILD_VARIANT)
 
 HOST_LDFLAGS += \
 	-Wl,-rpath $(STAGING_DIR_HOST)/lib

@@ -1,4 +1,5 @@
 include ./common-buffalo.mk
+include ./common-nec.mk
 include ./common-netgear.mk
 include ./common-senao.mk
 include ./common-tp-link.mk
@@ -345,6 +346,16 @@ define Device/alfa-network_tube-2hq
 endef
 TARGET_DEVICES += alfa-network_tube-2hq
 
+define Device/alfa-network_wifi-camppro-nano-duo
+  SOC := qca9531
+  DEVICE_VENDOR := ALFA Network
+  DEVICE_MODEL := WiFi CampPro Nano Duo
+  DEVICE_PACKAGES := kmod-usb2 kmod-mt76x0u -swconfig
+  IMAGE_SIZE := 15872k
+  SUPPORTED_DEVICES += campnano-duo
+endef
+TARGET_DEVICES += alfa-network_wifi-camppro-nano-duo
+
 define Device/allnet_all-wap02860ac
   $(Device/senao_loader_okli)
   SOC := qca9558
@@ -682,7 +693,7 @@ define Device/buffalo_wzr_ar7161
   SOC := ar7161
   BUFFALO_PRODUCT := WZR-HP-AG300H
   DEVICE_PACKAGES := kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport \
-	kmod-leds-reset kmod-owl-loader
+	kmod-owl-loader
   IMAGE_SIZE := 32320k
   SUPPORTED_DEVICES += wzr-hp-ag300h
 endef
@@ -797,6 +808,17 @@ define Device/comfast_cf-e314n-v2
   IMAGE_SIZE := 7936k
 endef
 TARGET_DEVICES += comfast_cf-e314n-v2
+
+define Device/comfast_cf-e355ac-v2
+  SOC := qca9531
+  DEVICE_VENDOR := COMFAST
+  DEVICE_MODEL := CF-E355AC
+  DEVICE_VARIANT := v2
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct \
+	-swconfig -uboot-envtools
+  IMAGE_SIZE := 16192k
+endef
+TARGET_DEVICES += comfast_cf-e355ac-v2
 
 define Device/comfast_cf-e375ac
   SOC := qca9563
@@ -1211,10 +1233,10 @@ define Device/dlink_dir-825-b1
   DEVICE_MODEL := DIR-825
   DEVICE_VARIANT := B1
   DEVICE_PACKAGES := kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport \
-	kmod-leds-reset kmod-owl-loader kmod-switch-rtl8366s
+	kmod-owl-loader kmod-switch-rtl8366s
   IMAGE_SIZE := 7808k
   FACTORY_SIZE := 6144k
-  IMAGES += factory.bin
+# IMAGES += factory.bin
   IMAGE/factory.bin = append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | \
 	pad-rootfs | check-size $$$$(FACTORY_SIZE) | pad-to $$$$(FACTORY_SIZE) | \
 	append-string 01AP94-AR7161-RT-080619-00
@@ -1226,8 +1248,7 @@ define Device/dlink_dir-825-c1
   DEVICE_VENDOR := D-Link
   DEVICE_MODEL := DIR-825
   DEVICE_VARIANT := C1
-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport kmod-leds-reset \
-	kmod-owl-loader
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport kmod-owl-loader
   SUPPORTED_DEVICES += dir-825-c1
   IMAGE_SIZE := 15936k
   IMAGES := factory.bin sysupgrade.bin
@@ -1244,7 +1265,7 @@ define Device/dlink_dir-835-a1
   DEVICE_VENDOR := D-Link
   DEVICE_MODEL := DIR-835
   DEVICE_VARIANT := A1
-  DEVICE_PACKAGES := kmod-usb2 kmod-leds-reset kmod-owl-loader
+  DEVICE_PACKAGES := kmod-usb2 kmod-owl-loader
   SUPPORTED_DEVICES += dir-835-a1
   IMAGE_SIZE := 15936k
   IMAGES := factory.bin sysupgrade.bin
@@ -1807,6 +1828,21 @@ define Device/huawei_ap5030dn
 endef
 TARGET_DEVICES += huawei_ap5030dn
 
+define Device/huawei_ap6010dn
+  SOC := ar9344
+  DEVICE_VENDOR := Huawei
+  DEVICE_MODEL := AP6010DN
+  LOADER_TYPE := bin
+  LOADER_FLASH_OFFS := 0x111DC0
+  KERNEL_SIZE := 15360k
+  IMAGE_SIZE := 30720k
+  COMPILE := loader-$(1).bin
+  COMPILE/loader-$(1).bin := loader-okli-compile | pad-to 64k | uImage none
+  KERNEL := kernel-bin | append-dtb | lzma | uImage lzma -M 0x4f4b4c49 | loader-okli $(1) 8128
+  KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | loader-kernel | uImage none
+endef
+TARGET_DEVICES += huawei_ap6010dn
+
 define Device/iodata_etg3-r
   SOC := ar9342
   DEVICE_VENDOR := I-O DATA
@@ -2046,6 +2082,36 @@ define Device/nec_wg1200cr
 endef
 TARGET_DEVICES += nec_wg1200cr
 
+define Device/nec_wg1400hp
+  SOC := qca9558
+  DEVICE_MODEL := Aterm WG1400HP
+  IMAGE_SIZE := 16128k
+  NEC_FW_TYPE := H040b
+  $(Device/nec-netbsd-aterm)
+  DEVICE_PACKAGES += kmod-ath10k-ct ath10k-firmware-qca988x-ct
+endef
+TARGET_DEVICES += nec_wg1400hp
+
+define Device/nec_wg1800hp
+  SOC := qca9558
+  DEVICE_MODEL := Aterm WG1800HP
+  IMAGE_SIZE := 16128k
+  NEC_FW_TYPE := H040a
+  $(Device/nec-netbsd-aterm)
+  DEVICE_PACKAGES += kmod-ath10k-ct ath10k-firmware-qca988x-ct
+endef
+TARGET_DEVICES += nec_wg1800hp
+
+define Device/nec_wg1800hp2
+  SOC := qca9558
+  DEVICE_MODEL := Aterm WG1800HP2
+  IMAGE_SIZE := 16128k
+  NEC_FW_TYPE := H049
+  $(Device/nec-netbsd-aterm)
+  DEVICE_PACKAGES += kmod-ath10k-ct ath10k-firmware-qca988x-ct
+endef
+TARGET_DEVICES += nec_wg1800hp2
+
 define Device/nec_wg800hp
   SOC := qca9563
   DEVICE_VENDOR := NEC
@@ -2110,7 +2176,6 @@ define Device/netgear_wndap360
   $(Device/netgear_generic)
   SOC := ar7161
   DEVICE_MODEL := WNDAP360
-  DEVICE_PACKAGES := kmod-leds-reset
   IMAGE_SIZE := 7744k
   BLOCKSIZE := 256k
   KERNEL := kernel-bin | append-dtb | gzip | uImage gzip
@@ -2531,7 +2596,7 @@ define Device/phicomm_k2t
   IMAGE_SIZE := 15744k
   IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | \
 	check-size | append-metadata
-  DEVICE_PACKAGES := kmod-leds-reset kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9888-ct
+  DEVICE_PACKAGES := kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9888-ct
 endef
 TARGET_DEVICES += phicomm_k2t
 
@@ -2900,13 +2965,20 @@ endef
 TARGET_DEVICES += sitecom_wlr-8100
 
 define Device/sophos_ap15
-  SOC := qca9558
+  SOC := qca9557
   DEVICE_VENDOR := Sophos
   DEVICE_MODEL := AP15
-  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
   IMAGE_SIZE := 15936k
 endef
 TARGET_DEVICES += sophos_ap15
+
+define Device/sophos_ap15c
+  SOC := qca9557
+  DEVICE_VENDOR := Sophos
+  DEVICE_MODEL := AP15C
+  IMAGE_SIZE := 15936k
+endef
+TARGET_DEVICES += sophos_ap15c
 
 define Device/sophos_ap55
   SOC := qca9558
@@ -3030,7 +3102,7 @@ define Device/trendnet_tew-673gru
 	kmod-owl-loader kmod-switch-rtl8366s
   IMAGE_SIZE := 7808k
   FACTORY_SIZE := 6144k
-  IMAGES += factory.bin
+# IMAGES += factory.bin
   IMAGE/factory.bin = append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | \
 	pad-rootfs | check-size $$$$(FACTORY_SIZE) | pad-to $$$$(FACTORY_SIZE) | \
 	append-string AP94-AR7161-RT-080619-01
@@ -3250,7 +3322,7 @@ TARGET_DEVICES += zbtlink_zbt-wd323
 define Device/zyxel_nwa11xx
   $(Device/loader-okli-uimage)
   SOC := ar9342
-  DEVICE_VENDOR := ZyXEL
+  DEVICE_VENDOR := Zyxel
   LOADER_FLASH_OFFS := 0x050000
   KERNEL := kernel-bin | append-dtb | lzma | uImage lzma -M 0x4f4b4c49
   IMAGE_SIZE := 8192k
@@ -3297,7 +3369,7 @@ TARGET_DEVICES += zyxel_nwa1123-ni
 
 define Device/zyxel_nbg6616
   SOC := qca9557
-  DEVICE_VENDOR := ZyXEL
+  DEVICE_VENDOR := Zyxel
   DEVICE_MODEL := NBG6616
   DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport kmod-rtc-pcf8563 \
 	kmod-ath10k-ct ath10k-firmware-qca988x-ct

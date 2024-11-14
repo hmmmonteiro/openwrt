@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_VERSION:=2024.01
-PKG_HASH:=b99611f1ed237bf3541bdc8434b68c96a6e05967061f992443cb30aabebef5b3
+PKG_VERSION:=2024.10
+PKG_HASH:=b28daf4ac17e43156363078bf510297584137f6df50fced9b12df34f61a92fb0
 PKG_BUILD_DEPENDS:=!(TARGET_ramips||TARGET_mediatek_mt7623):arm-trusted-firmware-tools/host
 
 UBOOT_USE_INTREE_DTC:=1
@@ -219,6 +219,18 @@ define U-Boot/mt7629_rfb
   UBOOT_CONFIG:=mt7629_rfb
 endef
 
+define U-Boot/mt7981_abt_asr3000
+  NAME:=ABT ASR3000
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=abt_asr3000
+  UBOOT_CONFIG:=mt7981_abt_asr3000
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=spim-nand
+  BL2_SOC:=mt7981
+  BL2_DDRTYPE:=ddr3
+  DEPENDS:=+trusted-firmware-a-mt7981-spim-nand-ddr3
+endef
+
 define U-Boot/mt7981_cmcc_rax3000m-emmc
   NAME:=CMCC RAX3000M
   BUILD_SUBTARGET:=filogic
@@ -241,6 +253,30 @@ define U-Boot/mt7981_cmcc_rax3000m-nand
   BL2_SOC:=mt7981
   BL2_DDRTYPE:=ddr4
   DEPENDS:=+trusted-firmware-a-mt7981-spim-nand-ddr4
+endef
+
+define U-Boot/mt7981_glinet_gl-x3000
+  NAME:=GL.iNet GL-X3000
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=glinet_gl-x3000
+  UBOOT_CONFIG:=mt7981_glinet_gl-x3000
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=emmc
+  BL2_SOC:=mt7981
+  BL2_DDRTYPE:=ddr4
+  DEPENDS:=+trusted-firmware-a-mt7981-emmc-ddr4
+endef
+
+define U-Boot/mt7981_glinet_gl-xe3000
+  NAME:=GL.iNet GL-XE3000
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=glinet_gl-xe3000
+  UBOOT_CONFIG:=mt7981_glinet_gl-x3000
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=emmc
+  BL2_SOC:=mt7981
+  BL2_DDRTYPE:=ddr4
+  DEPENDS:=+trusted-firmware-a-mt7981-emmc-ddr4
 endef
 
 define U-Boot/mt7981_h3c_magic-nx30-pro
@@ -328,13 +364,26 @@ define U-Boot/mt7981_rfb-emmc
   DEPENDS:=+trusted-firmware-a-mt7981-emmc-ddr3
 endef
 
+define U-Boot/mt7981_gatonetworks_gdsp
+  NAME:=GatoNetworks GDSP
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=gatonetworks_gdsp
+  UBOOT_CONFIG:=mt7981_gatonetworks_gdsp
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=nor
+  BL2_SOC:=mt7981
+  BL2_DDRTYPE:=ddr3
+  DEPENDS:=+trusted-firmware-a-mt7981-nor-ddr3
+  FIP_COMPRESS:=1
+endef
+
 define U-Boot/mt7981_rfb-nor
   NAME:=MT7981 Reference Board
   BUILD_SUBTARGET:=filogic
   BUILD_DEVICES:=mediatek_mt7981-rfb
   UBOOT_CONFIG:=mt7981_nor_rfb
   UBOOT_IMAGE:=u-boot.fip
-  BL2_BOOTDEV:=spim-nand
+  BL2_BOOTDEV:=nor
   BL2_SOC:=mt7981
   BL2_DDRTYPE:=ddr3
   DEPENDS:=+trusted-firmware-a-mt7981-nor-ddr3
@@ -557,6 +606,18 @@ define U-Boot/mt7986_tplink_tl-xdr6088
   DEPENDS:=+trusted-firmware-a-mt7986-spim-nand-ddr3
 endef
 
+define U-Boot/mt7986_tplink_tl-xtr8488
+  NAME:=TP-LINK TL-XTR8488
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=tplink_tl-xtr8488
+  UBOOT_CONFIG:=mt7986_tplink_tl-xtr8488
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=spim-nand
+  BL2_SOC:=mt7986
+  BL2_DDRTYPE:=ddr4
+  DEPENDS:=+trusted-firmware-a-mt7986-spim-nand-ddr4
+endef
+
 define U-Boot/mt7986_xiaomi_redmi-router-ax6000
   NAME:=Xiaomi Redmi AX6000
   BUILD_SUBTARGET:=filogic
@@ -579,6 +640,18 @@ define U-Boot/mt7986_zyxel_ex5601-t0
   BL2_SOC:=mt7986
   BL2_DDRTYPE:=ddr4
   DEPENDS:=+trusted-firmware-a-mt7986-spim-nand-4k-ddr4
+endef
+
+define U-Boot/mt7988_arcadyan_mozart
+  NAME:=Arcadyan Mozart
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=arcadyan_mozart
+  UBOOT_CONFIG:=mt7988a_arcadyan_mozart
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=emmc
+  BL2_SOC:=mt7988
+  BL2_DDRTYPE:=comb
+  DEPENDS:=+trusted-firmware-a-mt7988-emmc-comb
 endef
 
 define U-Boot/mt7988_bananapi_bpi-r4-emmc
@@ -662,7 +735,7 @@ define U-Boot/mt7988_rfb-spim-nand
   BL2_BOOTDEV:=spim-nand
   BL2_SOC:=mt7988
   BL2_DDRTYPE:=comb
-  DEPENDS:=+trusted-firmware-a-mt7988-spim-nand-comb
+  DEPENDS:=+trusted-firmware-a-mt7988-spim-nand-comb +trusted-firmware-a-mt7988-spim-nand-ubi-comb
 endef
 
 define U-Boot/mt7988_rfb-snand
@@ -734,8 +807,12 @@ UBOOT_TARGETS := \
 	mt7628_rfb \
 	mt7628_ravpower_rp-wd009 \
 	mt7629_rfb \
+	mt7981_abt_asr3000 \
 	mt7981_cmcc_rax3000m-emmc \
 	mt7981_cmcc_rax3000m-nand \
+	mt7981_gatonetworks_gdsp \
+	mt7981_glinet_gl-x3000 \
+	mt7981_glinet_gl-xe3000 \
 	mt7981_h3c_magic-nx30-pro \
 	mt7981_jcg_q30-pro \
 	mt7981_nokia_ea0326gmp \
@@ -761,9 +838,11 @@ UBOOT_TARGETS := \
 	mt7986_tplink_tl-xdr4288 \
 	mt7986_tplink_tl-xdr6086 \
 	mt7986_tplink_tl-xdr6088 \
+	mt7986_tplink_tl-xtr8488 \
 	mt7986_xiaomi_redmi-router-ax6000 \
 	mt7986_zyxel_ex5601-t0 \
 	mt7986_rfb \
+	mt7988_arcadyan_mozart \
 	mt7988_bananapi_bpi-r4-emmc \
 	mt7988_bananapi_bpi-r4-sdmmc \
 	mt7988_bananapi_bpi-r4-snand \
@@ -775,6 +854,12 @@ UBOOT_TARGETS := \
 	mt7988_rfb-nor \
 	mt7988_rfb-emmc \
 	mt7988_rfb-sd
+
+UBOOT_CUSTOMIZE_CONFIG := \
+	--disable TOOLS_KWBIMAGE \
+	--disable TOOLS_LIBCRYPTO \
+	--disable TOOLS_MKEFICAPSULE \
+	--enable SERIAL_RX_BUFFER
 
 ifdef CONFIG_TARGET_mediatek
 UBOOT_MAKE_FLAGS += $(UBOOT_IMAGE:.fip=.bin)
